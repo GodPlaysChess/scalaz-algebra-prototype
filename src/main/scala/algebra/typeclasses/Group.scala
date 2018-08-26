@@ -3,16 +3,18 @@ package algebra.typeclasses
 import algebra.data.Rational
 import scalaz.Tags.Multiplication
 import scalaz.{@@, Monoid, Tag}
+import scalaz.Equal
+import scalaz.syntax.equal._
 
 /**
   * Monoid with inverse
 * */
 trait Group[F] extends Monoid[F] {
   def inverse(a: F): F
-  
+
+  def divide(a: F, b: F): F = append(a, inverse(b))
+
   trait GroupLaw {
-    import scalaz.Equal
-    import scalaz.syntax.equal._
 
     def inverseCommutativity(a: F)(implicit E: Equal[F]): Boolean = append(a, inverse(a)) === append(inverse(a), a)
     
