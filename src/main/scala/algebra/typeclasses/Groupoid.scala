@@ -6,13 +6,15 @@ import scalaz.syntax.equal._
 import scalaz.std.anyVal.booleanInstance
 
 trait Groupoid[F] {
+  def zero: F // shall we keep it? What's the connection with inverse? Does it go straight to laws?
+
   def inverse(f: F): F
 
   def partialCombine(f1: F, f2: F): Option[F]
 
   trait GroupoidLaws {
     def associativityLaw(a: F, b: F, c: F)(implicit eq: Equal[F]): Boolean = {
-      partialCombine(a, b).flatMap(x ⇒partialCombine(x, c)) === partialCombine(b, c).flatMap(x ⇒ partialCombine(a, x))
+      partialCombine(a, b).flatMap(x ⇒ partialCombine(x, c)) === partialCombine(b, c).flatMap(x ⇒ partialCombine(a, x))
     }
 
     def inverseLaw(a: F)(implicit eq: Equal[F]): Boolean = {
