@@ -1,6 +1,6 @@
 package algebra.typeclasses
 
-import scalaz.Equal
+import scalaz.{Category, Equal}
 import scalaz.std.option._
 import scalaz.syntax.equal._
 import scalaz.std.anyVal.booleanInstance
@@ -13,7 +13,7 @@ trait Groupoid[F] {
   def partialCombine(f1: F, f2: F): Option[F]
 
   trait GroupoidLaws {
-    def associativityLaw(a: F, b: F, c: F)(implicit eq: Equal[F]): Boolean = {
+    def associativityLaw(a: F, b: F, c: F)(implicit E: Equal[F]): Boolean = {
       partialCombine(a, b).flatMap(x ⇒ partialCombine(x, c)) === partialCombine(b, c).flatMap(x ⇒ partialCombine(a, x))
     }
 
@@ -30,3 +30,20 @@ trait Groupoid[F] {
     }
   }
 }
+
+
+// this is Groupoid defined through category, and actually should be the same as above
+trait GroupoidC[=>:[_, _]] extends Category[=>:] {
+  def inverse[A, B](to: A =>: B): B =>: A
+
+  trait GroupoidLaws extends CategoryLaw {
+    def inverseLaw1[A, B](f: A =>: B)(implicit E: Equal[A =>: A]): Boolean = {
+      compose(inverse(f), f) === id[A]
+    }
+
+    def inverseLaw2[A, B](f: A =>: B)(implicit E: Equal[B =>: B]): Boolean = {
+      compose(f, inverse(f)) === id[B]
+    }
+  }
+}
+
