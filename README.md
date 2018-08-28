@@ -10,3 +10,6 @@
     What is zero for category then ( it's present in group, since group is a monoid )
 - Many typeclasses would make sense only for certain data structures. (Like Ring for Range or enum for instance).
     Where should we get those data structures from?
+
+- Quasigroup. Define it through inverse (then what's the laws) or through right and left division?
+    how do inverse relate to \ and / ?

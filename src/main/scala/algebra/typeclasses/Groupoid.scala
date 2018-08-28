@@ -5,6 +5,10 @@ import scalaz.std.option._
 import scalaz.syntax.equal._
 import scalaz.std.anyVal.booleanInstance
 
+/**
+  * Monoid with partiality or Category where each morphism is isomorphism
+  * https://en.wikipedia.org/wiki/Groupoid
+  */
 trait Groupoid[F] {
   def zero: F // shall we keep it? What's the connection with inverse? Does it go straight to laws?
 
