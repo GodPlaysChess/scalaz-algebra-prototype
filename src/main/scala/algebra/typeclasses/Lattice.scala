@@ -1,5 +1,9 @@
 package algebra.typeclasses
 
-class Lattice {
+/**
+  *
+  * https://en.wikipedia.org/wiki/Lattice_(group)
+  */
+trait Lattice[F] {
 
 }

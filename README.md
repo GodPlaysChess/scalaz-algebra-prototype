@@ -13,3 +13,5 @@
 
 - Quasigroup. Define it through inverse (then what's the laws) or through right and left division?
     how do inverse relate to \ and / ?
+
+-  How to encode Subgroup properly?
