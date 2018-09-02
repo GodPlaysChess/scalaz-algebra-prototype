@@ -16,7 +16,7 @@ trait Subgroup[H, F] extends Group[F] with Subset[H, F] { self ⇒
   def G: Group[H] = new Group[H] {
     override def inverse(a: H): H = ??? //from(self.inverse(to(a)))
 
-    override def zero: H = ??? //from(self.zero)
+    override def zero: H = ??? // narrow(self.zero)
 
     override def append(f1: H, f2: ⇒ H): H = ??? //self.append(to(f1), to(f2))
   }
