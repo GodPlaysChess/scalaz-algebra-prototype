@@ -1,6 +1,6 @@
 package algebra.typeclasses
 
-import algebra.data.Subset
+import algebra.data.{Subset, Subset1}
 
 /**
   * Group which is defined for a subset of F ( H <: F ), such as H is a group itself.
@@ -14,11 +14,11 @@ trait Subgroup[H, F] extends Group[F] with Subset[H, F] { self ⇒
 
   // how to ensure that result is belonging to a subset. Shall I put it in laws instead?
   def G: Group[H] = new Group[H] {
-    override def inverse(a: H): H = ??? //from(self.inverse(to(a)))
+    override def inverse(a: H): H = narrow(self.inverse(widen(a)))
 
-    override def zero: H = ??? // narrow(self.zero)
+    override def zero: H = narrow(self.zero)
 
-    override def append(f1: H, f2: ⇒ H): H = ??? //self.append(to(f1), to(f2))
+    override def append(f1: H, f2: ⇒ H): H = self.append(widen(f1), widen(f2))
   }
 
   trait SubgroupLaws extends MonoidLaw {
@@ -26,22 +26,16 @@ trait Subgroup[H, F] extends Group[F] with Subset[H, F] { self ⇒
   }
 }
 
-/*
-  * trait Subgroup[H, F] extends Group[H] with Subset[H, F] { self ⇒
-  *
-  * // do not know any other way to ensure that F is also a group.
-  * // it's possible also to extends group
-  * def G: Group[F] = new Group[F] {
-  * override def inverse(a: F): F = from(a).map(to)
-  *
-  * override def zero: F = to(self.zero)
-  *
-  * override def append(f1: F, f2: ⇒ F): F = to(self.append(from(f1), from(f2)))
-  * }
-  *
-  * trait SubgroupLaws extends MonoidLaw {
-  * //
-  * }
-  *
-  *
+/**
+  * Just exploring how to define a subgroup through a SubSet1
   */
+trait Subgroup1[F] extends Subset1[F] with Group[F] {
+  // this group should be defined on a subset
+  def subGroup: Group[F] = new Group[F] {
+    override def inverse(a: F): F = ???
+
+    override def zero: F = ???
+
+    override def append(f1: F, f2: ⇒ F): F = ???
+  }
+}

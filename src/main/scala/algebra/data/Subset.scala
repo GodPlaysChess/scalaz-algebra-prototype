@@ -14,16 +14,16 @@ import scalaz.std.option._
   */
 trait Subset[H, F] {
   // this is not strictly necessary but we somehow should signal that H is isomorphic to subset of F, in other words that F is a subtype of H
-//  implicit def E: F <:< H
+  implicit def E: F <:< H
 
   def widen(h: H): F // = E(h)
-  def narrow(f: F): Option[H]
+  def narrow(f: F): H = E.apply(f)
 
   trait SubsetLaws {
 
     // there have to be isomorhism from H to subset of F
     def isomorphism(h: H, f: F)(implicit E: Equal[H]): Boolean = {
-      narrow(widen(h)) === Some(h)
+      narrow(widen(h)) === h
     }
   }
 }
@@ -38,20 +38,29 @@ object Subset {
   sealed abstract class HType
   final case object Aiso extends HType
 
-  val trivialSubset: Subset[HType, FType] = new Subset[HType, FType] {
-    override def widen(h: HType): FType = h match {
-      case Aiso ⇒ A
-    }
-
-    override def narrow(f: FType): Option[HType] = f match {
-      case A ⇒ Some(Aiso)
-      case B ⇒ None
-    }
-  }
+//  val trivialSubset: Subset[HType, FType] = new Subset[HType, FType] {
+//    override def widen(h: HType): FType = h match {
+//      case Aiso ⇒ A
+//    }
+//
+//    override def narrow(f: FType): Option[HType] = f match {
+//      case A ⇒ Some(Aiso)
+//      case B ⇒ None
+//    }
+//  }
 
   // here F can be easily expressed as a Subtype of H how does this work then
+  // that would mean, that whenever we need to use a subset, we can always widen it's type to a superset F
   val E: FType <:< HType = ???
-  def back: FType ⇒ HType = E.apply
-
 
 }
+
+/**
+  * We can define subset also on the value level. Then actually any finite set of [F] is a subset of all values of F.
+  * @tparam F
+  */
+trait Subset1[F] {
+  def values: Set[F]
+}
+
+
