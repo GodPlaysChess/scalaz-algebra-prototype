@@ -9,35 +9,34 @@ import scalaz.Equal
   *
   */
 trait JoinSemilattice[F] {
-  implicit val PO: PartialOrdering[F] // TODO find scalaz equivalence
-  /**
-    * Returns upper bound for any provided subset
-    */
-  def join[H](subset: NonEmptySubset[H, F]): H
 
-
-  // TODO could we actually define it slightly smarter, including PO in the definition:
-  def join2(a: F, b: F): F
+  def join(a: F, b: F): F
 
   trait JoinSemilatticeLaws {
-    def associativity(implicit E: Equal[F]) = {
+    def associative(f1: F, f2: F, f3: F)(implicit F: Equal[F]): Boolean =
+      F.equal(join(f1, join(f2, f3)), join(join(f1, f2), f3))
 
+    def commutativity(f1: F, f2: F)(implicit F: Equal[F]): Boolean =
+      F.equal(join(f1, f2), join(f2, f1))
+
+    def idempotency(f: F)(implicit F: Equal[F]): Boolean = {
+      F.equal(join(f, f), f)
     }
   }
 
-
-
 }
+
 // could those be better described as Semilattice with tag @@ Upper, or @@ Lower ?
 trait MeetSemilattice[F] {
-  implicit val PO: PartialOrdering[F]
-
-  /**
-    * Returns lower bound for any provided subset
-    */
-  def meet[H](subset: Subset[H, F]): H
-
-
+  // same as join
+  def meet(a: F, b: F): F
 
 }
 
+/**
+  * Just a bad idea of is it possible to define it this way:  
+  * implicit val PO: PartialOrdering[F]
+  * def join[H](subset: NonEmptySubset[H, F]): H
+  *
+  */
+  
